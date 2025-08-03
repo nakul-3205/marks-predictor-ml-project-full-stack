@@ -25,6 +25,7 @@ packages=find_packages(),
 install_requires=get_requirements('requirements.txt')
 
 )
-
-#run this cmd for running the whole project 
-#python -m src.components.data_ingestion
+# '''
+# run this cmd for running the whole project 
+# python -m src.components.data_ingestion
+# '''
