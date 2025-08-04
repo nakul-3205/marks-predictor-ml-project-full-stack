@@ -5,4 +5,8 @@ matplotlib
 scikit-learn
 dill
 Flask
+catboost
+xgboost
+
+
 # -e .
