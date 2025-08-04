@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction | Student Marks Predictor</title>
+    <!-- Linking the consolidated CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle-btn">
+        <i class="fas fa-sun"></i>
+    </button>
+    
+    <div class="container">
+        <div class="card fade-in">
+            <a href="/" class="back-btn">← Back</a>
+            <div id="content-area" class="card-content">
+                <div class="emoji-icon">📝</div>
+                <h2>Prediction Form</h2>
+                <form id="prediction-form" class="prediction-form">
+                    <div class="input-group slide-in-right">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group slide-in-left">
+                        <label for="ethnicity">Race/Ethnicity:</label>
+                        <select id="ethnicity" name="ethnicity" required>
+                            <option value="">Select Ethnicity</option>
+                            <option value="group_a">Group A</option>
+                            <option value="group_b">Group B</option>
+                            <option value="group_c">Group C</option>
+                            <option value="group_d">Group D</option>
+                            <option value="group_e">Group E</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group slide-in-right">
+                        <label for="parental_level_of_education">Parental Level of Education:</label>
+                        <select id="parental_level_of_education" name="parental_level_of_education" required>
+                            <option value="">Select Level</option>
+                            <option value="some_high_school">Some High School</option>
+                            <option value="high_school_diploma">High School Diploma</option>
+                            <option value="some_college">Some College</option>
+                            <option value="associates_degree">Associate's Degree</option>
+                            <option value="bachelors_degree">Bachelor's Degree</option>
+                            <option value="masters_degree">Master's Degree</option>
+                            <option value="doctorate">Doctorate</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group slide-in-left">
+                        <label for="lunch">Lunch:</label>
+                        <select id="lunch" name="lunch" required>
+                            <option value="">Select Lunch Type</option>
+                            <option value="standard">Standard</option>
+                            <option value="free/reduced">Free/Reduced</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group slide-in-right">
+                        <label for="test_preparation_course">Test Preparation Course:</label>
+                        <select id="test_preparation_course" name="test_preparation_course" required>
+                            <option value="">Select Status</option>
+                            <option value="none">None</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group slide-in-left">
+                        <label for="reading_score">Reading Score:</label>
+                        <input type="number" id="reading_score" name="reading_score" placeholder="e.g., 75" min="0" max="100" required>
+                    </div>
+
+                    <div class="input-group slide-in-right">
+                        <label for="writing_score">Writing Score:</label>
+                        <input type="number" id="writing_score" name="writing_score" placeholder="e.g., 70" min="0" max="100" required>
+                    </div>
+                    
+                    <button type="submit" class="btn predict-btn pulse">
+                        <span>Predict Score</span>
+                        <div class="arrow-icon">→</div>
+                    </button>
+                </form>
+
+                <!-- Loading Animation and Result Placeholder -->
+                <div id="loading-animation" class="loading-animation" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Predicting your score...</p>
+                </div>
+                <div id="result-display" class="result-display" style="display: none;">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const storedTheme = localStorage.getItem('theme');
+            const form = document.getElementById('prediction-form');
+            const contentArea = document.getElementById('content-area');
+            const loadingAnimation = document.getElementById('loading-animation');
+            const resultDisplay = document.getElementById('result-display');
+            
+            // Set initial theme based on local storage
+            if (storedTheme === 'light-mode') {
+                document.body.classList.add('light-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                // Default to dark mode if no stored theme or if 'dark-mode' is stored
+                document.body.classList.add('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Toggle theme on button click
+            themeToggleBtn.addEventListener('click', () => {
+                const isDarkMode = document.body.classList.toggle('dark-mode');
+                if (isDarkMode) {
+                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('theme', 'dark-mode');
+                    document.body.classList.remove('light-mode');
+                } else {
+                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('theme', 'light-mode');
+                    document.body.classList.add('light-mode');
+                }
+            });
+
+            // Handle form submission and loading state
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                contentArea.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    form.style.display = 'none';
+                    loadingAnimation.style.display = 'flex';
+                    contentArea.classList.remove('fade-out');
+                    contentArea.classList.add('fade-in');
+                }, 300);
+
+                // Simulate API call
+                setTimeout(() => {
+                    const randomScore = Math.floor(Math.random() * 50) + 50; // Dummy score
+                    
+                    loadingAnimation.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        loadingAnimation.style.display = 'none';
+                        resultDisplay.innerHTML = `
+                            <div class="emoji-icon result-icon">🎉</div>
+                            <h3>Predicted Math Score:</h3>
+                            <div class="score-result">${randomScore} / 100</div>
+                            <p>Good job! This is an estimated score based on your inputs.</p>
+                            <a href="/prediction" class="btn retry-btn pulse">
+                                <span>Predict Again</span>
+                                <div class="arrow-icon">→</div>
+                            </a>
+                        `;
+                        resultDisplay.style.display = 'block';
+                        resultDisplay.classList.add('fade-in');
+                    }, 300);
+
+                }, 2000); // Wait for 2 seconds to simulate API call
+            });
+        });
+    </script>
+</body>
+</html>

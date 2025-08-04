@@ -1,0 +1,325 @@
+/* Main CSS file for the Student Score Predictor app */
+
+/* --- CSS Custom Properties for Theming --- */
+:root {
+    /* Dark Mode (Default) */
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --text-color: #e0e0e0;
+    --secondary-text-color: #b0b0b0;
+    --primary-color: #00e676; /* Vibrant Green */
+    --primary-color-hover: #00c853;
+    --border-color: #333;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --input-bg-color: #2e2e2e;
+    --input-focus-border: #00bfa5;
+}
+
+/* Light Mode */
+body.light-mode {
+    --background-color: #f0f2f5;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --secondary-text-color: #666666;
+    --primary-color: #2979ff; /* Vibrant Blue */
+    --primary-color-hover: #1c54b2;
+    --border-color: #d1d5db;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --input-bg-color: #f9fafb;
+    --input-focus-border: #2979ff;
+}
+
+/* --- Base & Layout Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.card {
+    background-color: var(--card-background);
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-content {
+    transition: opacity 0.3s ease-in-out;
+}
+
+h1, h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    position: relative;
+}
+
+p {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 2.5rem;
+}
+
+/* --- Icon & Emoji Styles --- */
+.emoji-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.emoji-icon.result-icon {
+    font-size: 3rem;
+}
+
+/* --- Button Styles --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 9999px; /* Pill shape */
+    background-color: var(--primary-color);
+    color: #121212;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transform: scale(1);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.btn:hover {
+    background-color: var(--primary-color-hover);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn span {
+    position: relative;
+    z-index: 2;
+}
+
+.arrow-icon {
+    margin-left: 0.75rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.btn:hover .arrow-icon {
+    transform: translateX(5px);
+}
+
+.back-btn {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    color: var(--secondary-text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+    color: var(--primary-color);
+    transform: translateX(-5px);
+}
+
+/* --- Form Styles --- */
+.prediction-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    text-align: left;
+    position: relative;
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-text-color);
+    transition: color 0.3s ease;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1a1'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus-border) 40%, transparent);
+}
+
+/* --- Theme Toggle Button --- */
+.theme-toggle-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-text-color);
+    transition: color 0.3s ease, transform 0.2s ease;
+    z-index: 10;
+}
+
+.theme-toggle-btn:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* --- Loading Animation --- */
+.loading-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.spinner {
+    width: 4rem;
+    height: 4rem;
+    border: 5px solid var(--border-color);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-animation p {
+    font-size: 1.1rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 0;
+}
+
+/* --- Result Display --- */
+.result-display {
+    text-align: center;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.score-result {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin: 1rem 0;
+    animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.retry-btn {
+    margin-top: 2rem;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.fade-in { animation: fadeIn 0.5s ease-in-out; }
+.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+.pulse { animation: pulse 2s infinite; }
+.slide-in-right { animation: slideInRight 0.5s ease-out forwards; }
+.slide-in-left { animation: slideInLeft 0.5s ease-out forwards; }
+
+.input-group:nth-child(1) { animation-delay: 0.1s; }
+.input-group:nth-child(2) { animation-delay: 0.2s; }
+.input-group:nth-child(3) { animation-delay: 0.3s; }
+.input-group:nth-child(4) { animation-delay: 0.4s; }
+.input-group:nth-child(5) { animation-delay: 0.5s; }
+.input-group:nth-child(6) { animation-delay: 0.6s; }
+.input-group:nth-child(7) { animation-delay: 0.7s; }
