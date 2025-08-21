@@ -1,10 +1,10 @@
+<!-- home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediction | Student Marks Predictor</title>
-    <!-- Linking the consolidated CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -20,7 +20,10 @@
             <div id="content-area" class="card-content">
                 <div class="emoji-icon">📝</div>
                 <h2>Prediction Form</h2>
-                <form id="prediction-form" class="prediction-form">
+                
+                <!-- Prediction Form -->
+                <form id="prediction-form" class="prediction-form" method="POST" action="/prediction">
+                    <!-- Gender -->
                     <div class="input-group slide-in-right">
                         <label for="gender">Gender:</label>
                         <select id="gender" name="gender" required>
@@ -30,6 +33,7 @@
                         </select>
                     </div>
 
+                    <!-- Race/Ethnicity -->
                     <div class="input-group slide-in-left">
                         <label for="ethnicity">Race/Ethnicity:</label>
                         <select id="ethnicity" name="ethnicity" required>
@@ -42,6 +46,7 @@
                         </select>
                     </div>
 
+                    <!-- Parental Level of Education -->
                     <div class="input-group slide-in-right">
                         <label for="parental_level_of_education">Parental Level of Education:</label>
                         <select id="parental_level_of_education" name="parental_level_of_education" required>
@@ -56,6 +61,7 @@
                         </select>
                     </div>
 
+                    <!-- Lunch -->
                     <div class="input-group slide-in-left">
                         <label for="lunch">Lunch:</label>
                         <select id="lunch" name="lunch" required>
@@ -65,6 +71,7 @@
                         </select>
                     </div>
 
+                    <!-- Test Preparation Course -->
                     <div class="input-group slide-in-right">
                         <label for="test_preparation_course">Test Preparation Course:</label>
                         <select id="test_preparation_course" name="test_preparation_course" required>
@@ -74,103 +81,92 @@
                         </select>
                     </div>
 
+                    <!-- Reading Score -->
                     <div class="input-group slide-in-left">
                         <label for="reading_score">Reading Score:</label>
                         <input type="number" id="reading_score" name="reading_score" placeholder="e.g., 75" min="0" max="100" required>
                     </div>
 
+                    <!-- Writing Score -->
                     <div class="input-group slide-in-right">
                         <label for="writing_score">Writing Score:</label>
                         <input type="number" id="writing_score" name="writing_score" placeholder="e.g., 70" min="0" max="100" required>
                     </div>
-                    
+
                     <button type="submit" class="btn predict-btn pulse">
                         <span>Predict Score</span>
                         <div class="arrow-icon">→</div>
                     </button>
                 </form>
 
-                <!-- Loading Animation and Result Placeholder -->
+                <!-- Loading Animation -->
                 <div id="loading-animation" class="loading-animation" style="display: none;">
                     <div class="spinner"></div>
                     <p>Predicting your score...</p>
                 </div>
-                <div id="result-display" class="result-display" style="display: none;">
-                    <!-- Content will be injected here by JavaScript -->
+
+                <!-- Result Display -->
+                <div id="result-display" class="result-display">
+                    {% if result %}
+                        <h3>Predicted Score: {{ result }}</h3>
+                    {% elif error %}
+                        <h3 style="color:red;">{{ error }}</h3>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleBtn = document.getElementById('theme-toggle');
             const storedTheme = localStorage.getItem('theme');
             const form = document.getElementById('prediction-form');
-            const contentArea = document.getElementById('content-area');
             const loadingAnimation = document.getElementById('loading-animation');
-            const resultDisplay = document.getElementById('result-display');
-            
-            // Set initial theme based on local storage
-            if (storedTheme === 'light-mode') {
+            const readingInput = document.getElementById('reading_score');
+            const writingInput = document.getElementById('writing_score');
+
+            // Theme setup
+            if(storedTheme === 'light-mode') {
                 document.body.classList.add('light-mode');
                 themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
             } else {
-                // Default to dark mode if no stored theme or if 'dark-mode' is stored
                 document.body.classList.add('dark-mode');
                 themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
             }
-            
-            // Toggle theme on button click
+
             themeToggleBtn.addEventListener('click', () => {
-                const isDarkMode = document.body.classList.toggle('dark-mode');
-                if (isDarkMode) {
+                const isDark = document.body.classList.toggle('dark-mode');
+                if(isDark) {
                     themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
-                    localStorage.setItem('theme', 'dark-mode');
+                    localStorage.setItem('theme','dark-mode');
                     document.body.classList.remove('light-mode');
                 } else {
                     themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-                    localStorage.setItem('theme', 'light-mode');
+                    localStorage.setItem('theme','light-mode');
                     document.body.classList.add('light-mode');
                 }
             });
 
-            // Handle form submission and loading state
+            // Show loading animation on submit
             form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                contentArea.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    form.style.display = 'none';
-                    loadingAnimation.style.display = 'flex';
-                    contentArea.classList.remove('fade-out');
-                    contentArea.classList.add('fade-in');
-                }, 300);
+                const readingValue = parseFloat(readingInput.value);
+                const writingValue = parseFloat(writingInput.value);
 
-                // Simulate API call
-                setTimeout(() => {
-                    const randomScore = Math.floor(Math.random() * 50) + 50; // Dummy score
-                    
-                    loadingAnimation.classList.add('fade-out');
-                    
-                    setTimeout(() => {
-                        loadingAnimation.style.display = 'none';
-                        resultDisplay.innerHTML = `
-                            <div class="emoji-icon result-icon">🎉</div>
-                            <h3>Predicted Math Score:</h3>
-                            <div class="score-result">${randomScore} / 100</div>
-                            <p>Good job! This is an estimated score based on your inputs.</p>
-                            <a href="/prediction" class="btn retry-btn pulse">
-                                <span>Predict Again</span>
-                                <div class="arrow-icon">→</div>
-                            </a>
-                        `;
-                        resultDisplay.style.display = 'block';
-                        resultDisplay.classList.add('fade-in');
-                    }, 300);
+                if (readingValue < 0 || readingValue > 100) {
+                    alert("Reading score must be between 0 and 100!");
+                    e.preventDefault(); // stop form submission
+                    return;
+                }
 
-                }, 2000); // Wait for 2 seconds to simulate API call
+                if (writingValue < 0 || writingValue > 100) {
+                    alert("Writing score must be between 0 and 100!");
+                    e.preventDefault(); // stop form submission
+                    return;
+                }
+
+                loadingAnimation.style.display = 'flex';
             });
         });
     </script>
