@@ -20,7 +20,7 @@ for i, col in enumerate(cat_pipeline.feature_names_in_):
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('index.html')
 
 @app.route('/prediction', methods=['POST'])
 def prediction():
